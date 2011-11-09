@@ -34,12 +34,12 @@
 	</ColorConvertion>
 
 	<ThresholdSP type="SetHSV" thread="ProcessingThread" group="s1">
-		<hue_min>5</hue_min>
-		<hue_max>32</hue_max>
-		<sat_min>20</sat_min>
+		<hue_min>60</hue_min>
+		<hue_max>90</hue_max>
+		<sat_min>130</sat_min>
 		<sat_max>255</sat_max>
-		<val_min>20</val_min>
-		<val_max>255</val_max>
+		<val_min>40</val_min>
+		<val_min>255</val_max>
 	</ThresholdSP>
 
 	<MorphClose type="CvMorphology" thread="ProcessingThread" group="s1">
@@ -71,22 +71,14 @@
 	
 	<VisualServoIB type="VisualServoIB" thread="ProcessingThread" group="s1">
         </VisualServoIB>
-	
+	<!--
         <Mrrocpp type="Mrrocpp" thread="MrrocProxyThread" group="s1">
                 <port>8888</port>
         </Mrrocpp>
-		
+	-->	
 	<PreviewWindow type="CvWindow" thread="PreviewExecutor" group="s1">
 		<title>Preview</title>
 	</PreviewWindow>
-	
-	<Writer type="CvVideoWriter" thread="WriterExecutor" group="s1">
-			<filename>mov1.avi</filename>
-			<fourcc>MJPG</fourcc>
-			<size>640 480</size>
-			<fps>25.0</fps>
-		</Writer>
-	
 
 </Components>
 
@@ -101,21 +93,16 @@
         <ProcessingThread type="passive">
                 <main_component>NewestImage</main_component>
         </ProcessingThread>
-
+<!--
         <MrrocProxyThread type="continuous">
                 <main_component>Mrrocpp</main_component>
         </MrrocProxyThread>
-
+-->
         <PreviewExecutor type="periodic">
                 <main_component>PreviewWindow</main_component>
                 <interval>0.03</interval>       
         </PreviewExecutor>
 
-        <WriterExecutor type="periodic">
-                <main_component>Writer</main_component>
-                <interval>0.03</interval>       
-        </WriterExecutor>
-        
 </Executors>
 
 <!-- Event connections -->
@@ -136,12 +123,10 @@
 
 	<Event source="FindBlock.blockLocated"          destination="VisualServoIB.onObjectLocated"/>
         <Event source="FindBlock.blockNotFound"         destination="VisualServoIB.onObjectNotFound"/>
-    <!--    <Event source="VisualServoIB.readingReady"  	destination="Mrrocpp.onRpcResult"/> -->
-	
-    <Event source="FindBlock.blockLocated"		destination="PreviewWindow.onNewImage"/>
-	
+       <!-- <Event source="VisualServoIB.readingReady"  	destination="Mrrocpp.onRpcResult"/> -->
+	<Event source="FindBlock.blockLocated"		destination="PreviewWindow.onNewImage"/>
+
 	<Event source="NewestImage.newImage"		destination="PreviewWindow.onNewImage"/>
-	<Event source="NewestImage.newImage"		destination="Writer.onNewImage"/>
 	
 </Events>
 
@@ -212,22 +197,18 @@
 
 	<VisualServoIB>
                 <in_position type="in" group="ImagePosition"/>
-                <out_reading type="out" group="reading"/>
+        <!--        <out_reading type="out" group="reading"/> -->
         </VisualServoIB>
-
+<!--
         <Mrrocpp>
                 <reading type="in" group="reading"/>
         </Mrrocpp>
-
+-->
 	<PreviewWindow>
 		<in_img type="in" group="NewestImage"/>
 	<!--	<in_draw type="in" group="DrawPoints"/>	-->
 		<in_draw type="in" group="DrawLines"/>
 	</PreviewWindow>
-	
-	<Writer>
-		<in_img type="in" group="NewestImage"/>
-	</Writer>
 
 </DataStreams>
 </Task>

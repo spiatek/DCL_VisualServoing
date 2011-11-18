@@ -34,12 +34,18 @@
 	</ColorConvertion>
 
 	<ThresholdSP type="SetHSV" thread="ProcessingThread" group="s1">
-		<hue_min>0</hue_min>
-		<hue_max>20</hue_max>
+	<!--	<hue_min>5</hue_min>
+		<hue_max>50</hue_max>
 		<sat_min>60</sat_min>
 		<sat_max>255</sat_max>
-		<val_min>100</val_min>
-		<val_min>255</val_max>
+		<val_min>170</val_min>
+		<val_max>255</val_max>	-->
+		<hue_min>40</hue_min>
+		<hue_max>170</hue_max>
+		<sat_min>20</sat_min>
+		<sat_max>255</sat_max>
+		<val_min>175</val_min>
+		<val_max>255</val_max>	
 	</ThresholdSP>
 
 	<MorphClose type="CvMorphology" thread="ProcessingThread" group="s1">

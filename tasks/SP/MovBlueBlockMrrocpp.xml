@@ -79,14 +79,14 @@
 	<PreviewWindow type="CvWindow" thread="PreviewExecutor" group="s1">
 		<title>Preview</title>
 	</PreviewWindow>
-	
+	<!--
 	<Writer type="CvVideoWriter" thread="WriterExecutor" group="s1">
 			<filename>mov1.avi</filename>
 			<fourcc>MJPG</fourcc>
 			<size>640 480</size>
 			<fps>25.0</fps>
 		</Writer>
-	
+	-->
 
 </Components>
 
@@ -110,12 +110,12 @@
                 <main_component>PreviewWindow</main_component>
                 <interval>0.03</interval>       
         </PreviewExecutor>
-
+<!--
         <WriterExecutor type="periodic">
                 <main_component>Writer</main_component>
                 <interval>0.03</interval>       
         </WriterExecutor>
-        
+    -->    
 </Executors>
 
 <!-- Event connections -->
@@ -141,7 +141,7 @@
     <Event source="FindBlock.blockLocated"		destination="PreviewWindow.onNewImage"/>
 	
 	<Event source="NewestImage.newImage"		destination="PreviewWindow.onNewImage"/>
-	<Event source="NewestImage.newImage"		destination="Writer.onNewImage"/>
+	<!--<Event source="NewestImage.newImage"		destination="Writer.onNewImage"/>-->
 	
 </Events>
 
@@ -224,10 +224,10 @@
 	<!--	<in_draw type="in" group="DrawPoints"/>	-->
 		<in_draw type="in" group="DrawLines"/>
 	</PreviewWindow>
-	
+	<!--
 	<Writer>
 		<in_img type="in" group="NewestImage"/>
 	</Writer>
-
+-->
 </DataStreams>
 </Task>

@@ -1,6 +1,6 @@
-
-<!-- List of components -->
 <?xml version="1.0" encoding="utf-8"?>
+<!-- List of components -->
+
 <Task>
 <Components>
 
@@ -45,7 +45,7 @@
 		<sat_min>20</sat_min>
 		<sat_max>255</sat_max>
 		<val_min>20</val_min>
-		<val_min>255</val_max>
+		<val_max>255</val_max>
 	</ThresholdSP>
 
 	<MorphClose type="CvMorphology" thread="ProcessingThread" group="s1">

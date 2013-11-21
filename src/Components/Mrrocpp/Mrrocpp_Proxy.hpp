@@ -115,6 +115,7 @@ class Mrrocpp_Proxy: public Base::Component
 public:
 	Mrrocpp_Proxy(const std::string & name = "");
 	virtual ~Mrrocpp_Proxy();
+	void prepareInterface();
 
 protected:
 	virtual bool onStart();
@@ -160,10 +161,12 @@ private:
 	void onRpcResult();
 	void serviceRpc();
 
-	Base::Event *rpcCall;
+	//Base::Event *rpcCall;
 	Base::DataStreamOut <xdr_iarchive <> > rpcParam;
 	Base::DataStreamInPtr <Types::Mrrocpp_Proxy::Reading, Base::DataStreamBuffer::Newest, Base::Synchronization::Mutex> rpcResult;
+
 	Base::EventHandler <Mrrocpp_Proxy> h_onRpcResult;
+	Base::EventHandler <Mrrocpp_Proxy> h_onStep;
 
 	boost::shared_ptr <xdr_iarchive <> > header_iarchive;
 	boost::shared_ptr <xdr_iarchive <> > iarchive;

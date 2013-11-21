@@ -50,6 +50,31 @@ Mrrocpp_Proxy::~Mrrocpp_Proxy()
 	LOG(LTRACE) << "Mrrocpp_Proxy::~Mrrocpp_Proxy\n";
 }
 
+void Mrrocpp_Proxy::prepareInterface()
+{
+	LOG(LTRACE) << "Mrrocpp_Proxy::prepareInterface\n";
+
+	registerStream("reading", &reading);
+
+	//rpcCall = registerEvent("rpcCall");
+	registerStream("rpcParam", &rpcParam);
+	registerStream("rpcResult", &rpcResult);
+	h_onRpcResult.setup(this, &Mrrocpp_Proxy::onRpcResult);
+	registerHandler("onRpcResult", &h_onRpcResult);
+
+	h_onStep.setup(this, &Mrrocpp_Proxy::onStep);
+	registerHandler("onStep", &h_onStep);
+
+	addDependency("onRpcResult", &rpcResult);
+
+	serverSocket.setupServerSocket(port);
+
+	readingMessage.reset();
+	rpcResultMessage.reset();
+
+	state = MPS_LISTENING;
+}
+
 bool Mrrocpp_Proxy::onStart()
 {
 	LOG(LTRACE) << "Mrrocpp_Proxy::onStart\n";
@@ -59,21 +84,6 @@ bool Mrrocpp_Proxy::onStart()
 bool Mrrocpp_Proxy::onInit()
 {
 	LOG(LTRACE) << "Mrrocpp_Proxy::onInit\n";
-
-	registerStream("reading", &reading);
-
-	rpcCall = registerEvent("rpcCall");
-	registerStream("rpcParam", &rpcParam);
-	registerStream("rpcResult", &rpcResult);
-	h_onRpcResult.setup(this, &Mrrocpp_Proxy::onRpcResult);
-	registerHandler("onRpcResult", &h_onRpcResult);
-
-	serverSocket.setupServerSocket(port);
-
-	readingMessage.reset();
-	rpcResultMessage.reset();
-
-	state = MPS_LISTENING;
 
 	return true;
 }
@@ -155,7 +165,8 @@ void Mrrocpp_Proxy::tryReceiveFromMrrocpp()
 				LOG(LNOTICE)<<"RPC Call received.";
 				rpcCallMutex.lock();
 				rpcParam.write(*iarchive); // send RPC param
-				rpcCall->raise();
+				//TODO: !!!!!!!!
+				//rpcCall->raise();
 				state = MPS_WAITING_FOR_RPC_RESULT; // wait for RPC result
 			} else {
 				oarchive->clear_buffer();

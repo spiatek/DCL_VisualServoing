@@ -8,6 +8,7 @@
 
 #include "VisualServoIB_Processor.hpp"
 #include "Common/Logger.hpp"
+#include <boost/bind.hpp>
 
 namespace Processors {
 namespace VisualServoIB {
@@ -26,21 +27,28 @@ VisualServoIB_Processor::~VisualServoIB_Processor()
 	LOG(LTRACE) << "Good bye VisualServoIB_Processor\n";
 }
 
-bool VisualServoIB_Processor::onInit()
+void VisualServoIB_Processor::prepareInterface()
 {
-	LOG(LTRACE) << "VisualServoIB_Processor::initialize\n";
+	LOG(LTRACE) << "VisualServoIB_Processor::prepareInterface\n";
 
 	// Register data streams, events and event handlers HERE!
-	h_onObjectLocated.setup(this, &VisualServoIB_Processor::onObjectLocated);
-	registerHandler("onObjectLocated", &h_onObjectLocated);
-
-	h_onObjectNotFound.setup(this, &VisualServoIB_Processor::onObjectNotFound);
-	registerHandler("onObjectNotFound", &h_onObjectNotFound);
-
 	registerStream("in_position", &in_position);
 	registerStream("out_reading", &out_reading);
 
-	readingReady = registerEvent("readingReady");
+	h_onObjectLocated.setup(boost::bind(&VisualServoIB_Processor::onObjectLocated, this));
+	registerHandler("onObjectLocated", &h_onObjectLocated);
+	addDependency("onObjectLocated", &in_position);
+
+	h_onObjectNotFound.setup(boost::bind(&VisualServoIB_Processor::onObjectNotFound, this));
+	registerHandler("onObjectNotFound", &h_onObjectNotFound);
+	addDependency("onObjectNotFound", &in_position);
+
+	//readingReady = registerEvent("readingReady");
+}
+
+bool VisualServoIB_Processor::onInit()
+{
+	LOG(LTRACE) << "VisualServoIB_Processor::initialize\n";
 
 	return true;
 }
@@ -80,7 +88,7 @@ void VisualServoIB_Processor::onObjectLocated()
 
 
 		out_reading.write(ibr);
-		readingReady->raise();
+		//readingReady->raise();
 	}catch(exception& ex){
 		LOG(LERROR) << "VisualServoIB_Processor::onObjectLocated(): " << ex.what();
 	}
@@ -96,7 +104,7 @@ void VisualServoIB_Processor::onObjectNotFound()
 	}
 	out_reading.write(ibr);
 
-	readingReady->raise();
+	//readingReady->raise();
 }
 
 }//: namespace VisualServoIB

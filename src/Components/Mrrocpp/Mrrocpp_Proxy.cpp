@@ -59,10 +59,10 @@ void Mrrocpp_Proxy::prepareInterface()
 	//rpcCall = registerEvent("rpcCall");
 	registerStream("rpcParam", &rpcParam);
 	registerStream("rpcResult", &rpcResult);
-	h_onRpcResult.setup(this, &Mrrocpp_Proxy::onRpcResult);
+	h_onRpcResult.setup(boost::bind(&Mrrocpp_Proxy::onRpcResult, this));
 	registerHandler("onRpcResult", &h_onRpcResult);
 
-	h_onStep.setup(this, &Mrrocpp_Proxy::onStep);
+	h_onStep.setup(boost::bind(&Mrrocpp_Proxy::onStep, this));
 	registerHandler("onStep", &h_onStep);
 
 	addDependency("onRpcResult", &rpcResult);

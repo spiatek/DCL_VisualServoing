@@ -6,11 +6,14 @@
 #ifndef NEWESTIMAGE_PROCESSOR_HPP_
 #define NEWESTIMAGE_PROCESSOR_HPP_
 
-#include <cv.h>
+#include <opencv2/core/core.hpp>
+//#include <opencv2/imgproc/imgproc.hpp>
+
 #include "Component_Aux.hpp"
 #include "Component.hpp"
 #include "Panel_Empty.hpp"
 #include "DataStream.hpp"
+#include "EventHandler2.hpp"
 
 namespace Processors {
 namespace NewestImage {
@@ -31,6 +34,9 @@ public:
 	 * Destructor
 	 */
 	virtual ~NewestImage_Processor();
+
+	void prepareInterface();
+
 protected:
 
 	/*!
@@ -61,10 +67,10 @@ protected:
 	void onNewImage();
 
 	Base::DataStreamIn <cv::Mat, Base::DataStreamBuffer::Newest, Base::Synchronization::Mutex> in_img;
-	Base::EventHandler <NewestImage_Processor> h_onNewImage;
+	Base::EventHandler2 h_onNewImage;
 
 	Base::DataStreamOut<cv::Mat> out_img;
-	Base::Event * newImage;
+	//Base::Event * newImage;
 };
 
 }//: namespace NewestImage

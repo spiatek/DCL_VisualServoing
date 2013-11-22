@@ -12,7 +12,7 @@
 #include "Component.hpp"
 #include "Panel_Empty.hpp"
 #include "DataStream.hpp"
-#include "Props.hpp"
+#include "EventHandler2.hpp"
 #include "Types/Mrrocpp_Proxy/PBReading.hpp"
 
 /*!
@@ -73,6 +73,8 @@ public:
 	 */
 	virtual ~VisualServoPB_Processor();
 
+	void prepareInterface();
+
 protected:
 
 	/*!
@@ -110,9 +112,9 @@ private:
 	Base::DataStreamIn<struct timespec> in_timestamp;
 	Base::DataStreamOut<Types::Mrrocpp_Proxy::PBReading> out_reading;
 
-	Base::EventHandler <VisualServoPB_Processor> h_onObjectLocated;
-	Base::EventHandler <VisualServoPB_Processor> h_onObjectNotFound;
-	Base::Event* readingReady;
+	Base::EventHandler2 h_onObjectLocated;
+	Base::EventHandler2 h_onObjectNotFound;
+	//Base::Event* readingReady;
 };
 
 }//: namespace VisualServoPB

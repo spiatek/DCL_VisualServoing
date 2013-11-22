@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <boost/bind.hpp>
 
 #include "VisualServoPB_Processor.hpp"
 #include "Common/Logger.hpp"
@@ -23,21 +24,29 @@ VisualServoPB_Processor::~VisualServoPB_Processor() {
 	LOG(LTRACE) << "Good bye VisualServoPB_Processor\n";
 }
 
-bool VisualServoPB_Processor::onInit() {
+void VisualServoPB_Processor::prepareInterface() {
 	LOG(LTRACE) << "VisualServoPB_Processor::initialize\n";
 
 	// Register data streams, events and event handlers HERE!
-	h_onObjectLocated.setup(this, &VisualServoPB_Processor::onObjectLocated);
-	registerHandler("onObjectLocated", &h_onObjectLocated);
-
-	h_onObjectNotFound.setup(this, &VisualServoPB_Processor::onObjectNotFound);
-	registerHandler("onObjectNotFound", &h_onObjectNotFound);
-
 	registerStream("in_position", &in_position);
 	registerStream("in_timestamp", &in_timestamp);
 	registerStream("out_reading", &out_reading);
 
-	readingReady = registerEvent("readingReady");
+	h_onObjectLocated.setup(boost::bind(&VisualServoPB_Processor::onObjectLocated, this));
+	registerHandler("onObjectLocated", &h_onObjectLocated);
+	addDependency("onObjectLocated", &in_position);
+	addDependency("onObjectLocated", &in_timestamp);
+
+	h_onObjectNotFound.setup(boost::bind(&VisualServoPB_Processor::onObjectNotFound, this));
+	registerHandler("onObjectNotFound", &h_onObjectNotFound);
+	addDependency("onObjectNotFound", &in_position);
+	addDependency("onObjectNotFound", &in_timestamp);
+
+	//readingReady = registerEvent("readingReady");
+}
+
+bool VisualServoPB_Processor::onInit() {
+	LOG(LTRACE) << "VisualServoPB_Processor::initialize\n";
 
 	return true;
 }
@@ -71,7 +80,7 @@ void VisualServoPB_Processor::onObjectLocated() {
 	pbr.objectPosition = in_position.read();
 
 	out_reading.write(pbr);
-	readingReady->raise();
+	//readingReady->raise();
 }
 
 void VisualServoPB_Processor::onObjectNotFound() {
@@ -88,7 +97,7 @@ void VisualServoPB_Processor::onObjectNotFound() {
 	}
 	out_reading.write(pbr);
 
-	readingReady->raise();
+	//readingReady->raise();
 }
 
 void VisualServoPB_Processor::saveTime(Types::Mrrocpp_Proxy::PBReading& reading) {

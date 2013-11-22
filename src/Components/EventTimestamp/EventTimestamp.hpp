@@ -12,6 +12,7 @@
 #include "Component.hpp"
 #include "Panel_Empty.hpp"
 #include "DataStream.hpp"
+#include "EventHandler2.hpp"
 
 namespace Processors {
 namespace EventTimestamp {
@@ -32,6 +33,9 @@ public:
 	 * Destructor
 	 */
 	virtual ~EventTimestamp_Processor();
+
+	void prepareInterface();
+
 protected:
 
 	/*!
@@ -62,8 +66,9 @@ protected:
 
 	void onEvent();
 
-	Base::EventHandler <EventTimestamp_Processor> h_onEvent;
-	Base::Event *event;
+	Base::EventHandler2 h_onEvent;
+	//Base::Event *event;
+
 	Base::DataStreamOut <struct timespec> out_timestamp;
 
 	struct timespec clockResolution;

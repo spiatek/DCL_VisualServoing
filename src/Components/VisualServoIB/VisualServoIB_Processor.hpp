@@ -10,7 +10,8 @@
 #include "Component.hpp"
 #include "Panel_Empty.hpp"
 #include "DataStream.hpp"
-#include "Props.hpp"
+#include "Property.hpp"
+#include "EventHandler2.hpp"
 #include "Types/Mrrocpp_Proxy/IBReading.hpp"
 
 /*!
@@ -71,6 +72,9 @@ public:
 	 * Destructor
 	 */
 	virtual ~VisualServoIB_Processor();
+
+	void prepareInterface();
+
 protected:
 
 	/*!
@@ -104,9 +108,12 @@ private:
 	Base::DataStreamIn<Types::ImagePosition> in_position;
 	Base::DataStreamOut<Types::Mrrocpp_Proxy::IBReading> out_reading;
 
-	Base::EventHandler <VisualServoIB_Processor> h_onObjectLocated;
-	Base::EventHandler <VisualServoIB_Processor> h_onObjectNotFound;
-	Base::Event* readingReady;
+	Base::EventHandler2 h_onObjectLocated;
+	Base::EventHandler2 h_onObjectNotFound;
+
+	//Base::EventHandler <VisualServoIB_Processor> h_onObjectLocated;
+	//Base::EventHandler <VisualServoIB_Processor> h_onObjectNotFound;
+	//Base::Event* readingReady;
 };
 
 }//: namespace VisualServoIB

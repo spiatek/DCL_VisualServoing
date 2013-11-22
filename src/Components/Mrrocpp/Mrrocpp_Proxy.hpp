@@ -18,8 +18,9 @@
 #include "Component.hpp"
 #include "Panel_Empty.hpp"
 #include "Property.hpp"
-#include "xdr/xdr_oarchive.hpp"
-#include "xdr/xdr_iarchive.hpp"
+#include "EventHandler2.hpp"
+#include "Types/Mrrocpp_Proxy/xdr/xdr_oarchive.hpp"
+#include "Types/Mrrocpp_Proxy/xdr/xdr_iarchive.hpp"
 #include "Socket.hpp"
 #include "headers.h"
 #include "Types/Mrrocpp_Proxy/Reading.hpp"
@@ -165,8 +166,8 @@ private:
 	Base::DataStreamOut <xdr_iarchive <> > rpcParam;
 	Base::DataStreamInPtr <Types::Mrrocpp_Proxy::Reading, Base::DataStreamBuffer::Newest, Base::Synchronization::Mutex> rpcResult;
 
-	Base::EventHandler <Mrrocpp_Proxy> h_onRpcResult;
-	Base::EventHandler <Mrrocpp_Proxy> h_onStep;
+	Base::EventHandler2 h_onRpcResult;
+	Base::EventHandler2 h_onStep;
 
 	boost::shared_ptr <xdr_iarchive <> > header_iarchive;
 	boost::shared_ptr <xdr_iarchive <> > iarchive;

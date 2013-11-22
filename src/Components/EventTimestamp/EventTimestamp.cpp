@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <errno.h>
+#include <boost/bind.hpp>
 
 #include "EventTimestamp.hpp"
 #include "Common/Logger.hpp"
@@ -23,25 +24,29 @@ EventTimestamp_Processor::~EventTimestamp_Processor()
 	LOG(LTRACE) << "Good bye EventTimestamp_Processor\n";
 }
 
-bool EventTimestamp_Processor::onInit()
+void EventTimestamp_Processor::prepareInterface()
 {
 	LOG(LTRACE) << "EventTimestamp_Processor::initialize\n";
 
 	// Register data streams, events and event handlers HERE!
-	h_onEvent.setup(this, &EventTimestamp_Processor::onEvent);
-	registerHandler("onEvent", &h_onEvent);
-
 	registerStream("out_timestamp", &out_timestamp);
 
-	event = registerEvent("event");
+	h_onEvent.setup(boost::bind(&EventTimestamp_Processor::onEvent, this));
+	registerHandler("onEvent", &h_onEvent);
+
+	//event = registerEvent("event");
 
 	if(clock_getres(CLOCK_REALTIME, &clockResolution) == -1){
 		LOG(LFATAL) << "clock_getres() failed. " << strerror(errno);
 	}
 
-
 	double resolution = clockResolution.tv_sec + clockResolution.tv_nsec * 1e-9;
 	LOG(LNOTICE)<< "Clock resolution (clock_getres()) = " << resolution;
+}
+
+bool EventTimestamp_Processor::onInit()
+{
+	LOG(LTRACE) << "EventTimestamp_Processor::initialize\n";
 
 	return true;
 }
@@ -56,7 +61,7 @@ void EventTimestamp_Processor::onEvent()
 	}
 
 	out_timestamp.write(currentTime);
-	event->raise();
+	//event->raise();
 }
 
 bool EventTimestamp_Processor::onFinish()

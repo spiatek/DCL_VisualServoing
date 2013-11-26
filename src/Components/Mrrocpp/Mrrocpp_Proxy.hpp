@@ -16,7 +16,6 @@
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
-#include "Panel_Empty.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
 #include "Types/Mrrocpp_Proxy/xdr/xdr_oarchive.hpp"
@@ -208,6 +207,6 @@ private:
 
 }
 
-REGISTER_PROCESSOR_COMPONENT("Mrrocpp", Proxies::Mrrocpp::Mrrocpp_Proxy, Common::Panel_Empty)
+REGISTER_COMPONENT("Mrrocpp", Proxies::Mrrocpp::Mrrocpp_Proxy)
 
 #endif /* MRROCPP_PROXY_HPP_ */

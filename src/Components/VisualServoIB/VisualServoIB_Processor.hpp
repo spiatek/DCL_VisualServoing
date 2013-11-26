@@ -8,7 +8,6 @@
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
-#include "Panel_Empty.hpp"
 #include "DataStream.hpp"
 #include "Property.hpp"
 #include "EventHandler2.hpp"
@@ -123,6 +122,6 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_PROCESSOR_COMPONENT("VisualServoIB", Processors::VisualServoIB::VisualServoIB_Processor, Common::Panel_Empty)
+REGISTER_COMPONENT("VisualServoIB", Processors::VisualServoIB::VisualServoIB_Processor)
 
 #endif /* VISUALSERVOIB_PROCESSOR_PROCESSOR_HPP_ */

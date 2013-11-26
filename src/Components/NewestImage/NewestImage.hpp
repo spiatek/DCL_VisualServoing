@@ -11,7 +11,6 @@
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
-#include "Panel_Empty.hpp"
 #include "DataStream.hpp"
 #include "EventHandler2.hpp"
 
@@ -80,6 +79,6 @@ protected:
 /*
  * Register processor component.
  */
-REGISTER_PROCESSOR_COMPONENT("NewestImage", Processors::NewestImage::NewestImage_Processor, Common::Panel_Empty)
+REGISTER_COMPONENT("NewestImage", Processors::NewestImage::NewestImage_Processor)
 
 #endif /* NEWESTIMAGE_PROCESSOR_HPP_ */

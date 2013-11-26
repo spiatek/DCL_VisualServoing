@@ -10,7 +10,6 @@
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
-#include "Panel_Empty.hpp"
 #include "DataStream.hpp"
 #include "EventHandler2.hpp"
 #include "Types/Mrrocpp_Proxy/PBReading.hpp"
@@ -124,6 +123,6 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_PROCESSOR_COMPONENT("VisualServoPB", Processors::VisualServoPB::VisualServoPB_Processor, Common::Panel_Empty)
+REGISTER_COMPONENT("VisualServoPB", Processors::VisualServoPB::VisualServoPB_Processor)
 
 #endif /* VISUALSERVOPB_PROCESSOR_PROCESSOR_HPP_ */

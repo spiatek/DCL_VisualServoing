@@ -6,16 +6,14 @@
 #ifndef SETHSV_PROCESSOR_HPP_
 #define SETHSV_PROCESSOR_HPP_
 
-#include <cv.h>
+#include <opencv2/core/core.hpp>
 #include <string>
 
 #include <boost/shared_ptr.hpp>
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
-#include "Panel_Empty.hpp"
 #include "DataStream.hpp"
-#include "Props.hpp"
 #include "Types/Mrrocpp_Proxy/BReading.hpp"
 
 #include "xdr/xdr_iarchive.hpp"
@@ -188,6 +186,6 @@ private:
 /*
  * Register processor component.
  */
-REGISTER_PROCESSOR_COMPONENT("SetHSV", Processors::SetHSV::SetHSV_Processor, Common::Panel_Empty)
+REGISTER_COMPONENT("SetHSVsimple", Processors::SetHSV::SetHSV_Processor)
 
 #endif /* SETHSV_PROCESSOR_HPP_ */

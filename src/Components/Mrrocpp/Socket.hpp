@@ -59,7 +59,8 @@ public:
 
 private:
 	/** Socket file descriptor. */
-	int fd;
+	int fd, afd;
+	int p;
 };
 
 } // namespace Mrrocpp {

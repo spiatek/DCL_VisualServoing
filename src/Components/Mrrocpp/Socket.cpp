@@ -39,6 +39,8 @@ Socket::~Socket()
 
 void Socket::setupServerSocket(int port)
 {
+	p = port;
+	LOG(LNOTICE) << "Socket::setupServerSocket() " << port << "\n";
 	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		throw runtime_error("socket() failed: " + string(strerror(errno)));
 	}
@@ -60,23 +62,34 @@ void Socket::setupServerSocket(int port)
 		throw runtime_error("bind() failed: " + string(strerror(errno)));
 	}
 
-	if (listen(fd, 1) < 0) {
+	if (listen(fd, 10) < 0) {
+		LOG(LNOTICE) << "Socket::setupServerSocket() LISTEN FAILURE\n";
 		throw runtime_error("listen() failed: " + string(strerror(errno)));
 	}
+
+	LOG(LNOTICE) << "Socket::setupServerSocket() %%%" << INADDR_ANY << "%%% socket setsockopt bind i listen zrobione\n";
 }
 
 boost::shared_ptr <Proxies::Mrrocpp::Socket> Socket::acceptConnection()
 {
+	LOG(LNOTICE) << "Socket::acceptConnection()\n";
+
 	sockaddr_in m_addr;
 	int addr_length = sizeof(m_addr);
 
-	int acceptedFd = accept(fd, (sockaddr *) &m_addr, (socklen_t *) &addr_length);
+	int acceptedFd;
+
+	LOG(LNOTICE) << "try to accept connection " << getpid() << "\n";
+	acceptedFd = accept(fd, (sockaddr *) &m_addr, (socklen_t *) &addr_length);
+
 
 	if (acceptedFd < 0) {
 		throw runtime_error("accept() failed: " + string(strerror(errno)));
 	}
 	boost::shared_ptr <Socket> s = boost::shared_ptr <Socket>(new Socket());
 	s->fd = acceptedFd;
+
+	LOG(LNOTICE) << "Socket::acceptConnection zrobione()\n";
 
 	return s;
 }
@@ -96,12 +109,15 @@ bool Socket::isDataAvailable(double sec)
 		tvPtr = &tv;
 	}
 
-	int retval = select(fd + 1, &rfds, NULL, NULL, tvPtr);
+	//LOG(LNOTICE) << "BEFORE SELECT\n";
+	int retval = select(fd + 1, &rfds, NULL, NULL, NULL);
 
 	if (retval < 0) {
 		throw runtime_error("select() failed: " + string(strerror(errno)));
 	}
 	return retval > 0;
+
+	LOG(LNOTICE) << "AFTER SELECT " << retval << "\n";
 }
 
 bool Socket::isSocketOpened() const

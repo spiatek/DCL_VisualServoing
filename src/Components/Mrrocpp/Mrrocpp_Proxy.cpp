@@ -19,7 +19,7 @@ using namespace std;
 using namespace boost;
 
 Mrrocpp_Proxy::Mrrocpp_Proxy(const std::string & name) :
-	Base::Component(name), state(MPS_NOT_INITIALIZED), port("port", 1, "range")
+	Base::Component(name), state(MPS_NOT_INITIALIZED), port("port", 1, "range"), acceptConnectionTimeout("timeout", 5, "range")
 {
 	LOG(LTRACE) << "Mrrocpp_Proxy::Mrrocpp_Proxy\n";
 
@@ -41,7 +41,7 @@ Mrrocpp_Proxy::Mrrocpp_Proxy(const std::string & name) :
 	registerProperty(port);
 
 	waitForRequestTimeout = 0.12;
-	acceptConnectionTimeout = 0.1;
+	acceptConnectionTimeout = 5;
 	//waitForRequestTimeout = numeric_limits <double>::infinity();
 }
 
@@ -52,7 +52,7 @@ Mrrocpp_Proxy::~Mrrocpp_Proxy()
 
 void Mrrocpp_Proxy::prepareInterface()
 {
-	LOG(LTRACE) << "Mrrocpp_Proxy::prepareInterface\n";
+	LOG(LNOTICE) << "Mrrocpp_Proxy::prepareInterface\n";
 
 	registerStream("reading", &reading);
 
@@ -66,6 +66,7 @@ void Mrrocpp_Proxy::prepareInterface()
 	registerHandler("onStep", &h_onStep);
 
 	addDependency("onRpcResult", &rpcResult);
+	addDependency("onStep", NULL);
 
 	serverSocket.setupServerSocket(port);
 
@@ -109,7 +110,7 @@ bool Mrrocpp_Proxy::onFinish()
 
 bool Mrrocpp_Proxy::onStep()
 {
-	LOG(LTRACE) << "Mrrocpp_Proxy::onStep\n";
+	LOG(LNOTICE) << "Mrrocpp_Proxy::onStep\n";
 
 	timer.restart();
 
@@ -141,11 +142,11 @@ bool Mrrocpp_Proxy::onStep()
 
 void Mrrocpp_Proxy::tryAcceptConnection()
 {
-	LOG(LTRACE) << "Mrrocpp_Proxy::tryAcceptConnection()\n";
+	LOG(LNOTICE) << "Mrrocpp_Proxy::tryAcceptConnection()\n";
 	if (!serverSocket.isDataAvailable(acceptConnectionTimeout)) {
-		LOG(LTRACE) << "if (!serverSocket.isDataAvailable()) {\n";
 		return;
 	}
+
 	clientSocket = serverSocket.acceptConnection();
 
 	readingMessage.reset();
@@ -158,7 +159,7 @@ void Mrrocpp_Proxy::tryAcceptConnection()
 void Mrrocpp_Proxy::tryReceiveFromMrrocpp()
 {
 	try {
-		//LOG(LFATAL)<<"Mrrocpp_Proxy::tryReceiveFromMrrocpp() begin\n";
+		LOG(LNOTICE)<<"Mrrocpp_Proxy::tryReceiveFromMrrocpp() begin\n";
 		if (clientSocket->isDataAvailable(waitForRequestTimeout)) {
 			receiveBuffersFromMrrocpp();
 			if (imh.is_rpc_call) {
@@ -191,7 +192,7 @@ void Mrrocpp_Proxy::tryReceiveFromMrrocpp()
 
 void Mrrocpp_Proxy::onRpcResult()
 {
-	LOG(LTRACE) << "Mrrocpp_Proxy::onRpcResult\n";
+	LOG(LNOTICE) << "Mrrocpp_Proxy::onRpcResult\n";
 	rpcResultMessage = rpcResult.read();
 
 	if (state != MPS_WAITING_FOR_RPC_RESULT) {
@@ -212,7 +213,7 @@ void Mrrocpp_Proxy::onRpcResult()
 
 void Mrrocpp_Proxy::receiveBuffersFromMrrocpp()
 {
-	LOG(LTRACE) << "Mrrocpp_Proxy::receiveBuffersFromMrrocpp() begin\n";
+	LOG(LNOTICE) << "Mrrocpp_Proxy::receiveBuffersFromMrrocpp() begin\n";
 	header_iarchive->clear_buffer();
 
 	clientSocket->read(header_iarchive->get_buffer(), initiate_message_header_size);
@@ -227,7 +228,7 @@ void Mrrocpp_Proxy::receiveBuffersFromMrrocpp()
 
 void Mrrocpp_Proxy::sendBuffersToMrrocpp()
 {
-	LOG(LTRACE) << "sendBuffersToMrrocpp() begin\n";
+	LOG(LNOTICE) << "sendBuffersToMrrocpp() begin\n";
 
 	rmh.data_size = oarchive->getArchiveSize();
 	//LOG(LFATAL) << "sendBuffersToMrrocpp(): rmh.data_size = " << rmh.data_size;

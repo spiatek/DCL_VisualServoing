@@ -193,9 +193,10 @@ private:
 	boost::mutex rpcCallMutex;
 
 	Base::Property<int> port;
+	Base::Property<double> acceptConnectionTimeout;
 
 	double waitForRequestTimeout;
-	double acceptConnectionTimeout;
+	//double acceptConnectionTimeout;
 
 	Common::Timer timer;
 

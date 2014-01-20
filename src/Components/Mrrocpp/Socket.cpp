@@ -39,8 +39,7 @@ Socket::~Socket()
 
 void Socket::setupServerSocket(int port)
 {
-	p = port;
-	LOG(LNOTICE) << "Socket::setupServerSocket() " << port << "\n";
+	LOG(LTRACE) << "Socket::setupServerSocket() " << port << "\n";
 	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		throw runtime_error("socket() failed: " + string(strerror(errno)));
 	}
@@ -63,23 +62,23 @@ void Socket::setupServerSocket(int port)
 	}
 
 	if (listen(fd, 10) < 0) {
-		LOG(LNOTICE) << "Socket::setupServerSocket() LISTEN FAILURE\n";
+		LOG(LTRACE) << "Socket::setupServerSocket() LISTEN FAILURE\n";
 		throw runtime_error("listen() failed: " + string(strerror(errno)));
 	}
 
-	LOG(LNOTICE) << "Socket::setupServerSocket() %%%" << INADDR_ANY << "%%% socket setsockopt bind i listen zrobione\n";
+	LOG(LTRACE) << "Socket::setupServerSocket() %%%" << INADDR_ANY << "%%% socket setsockopt bind i listen zrobione\n";
 }
 
 boost::shared_ptr <Proxies::Mrrocpp::Socket> Socket::acceptConnection()
 {
-	LOG(LNOTICE) << "Socket::acceptConnection()\n";
+	LOG(LTRACE) << "Socket::acceptConnection()\n";
 
 	sockaddr_in m_addr;
 	int addr_length = sizeof(m_addr);
 
 	int acceptedFd;
 
-	LOG(LNOTICE) << "try to accept connection " << getpid() << "\n";
+	LOG(LTRACE) << "try to accept connection " << getpid() << "\n";
 	acceptedFd = accept(fd, (sockaddr *) &m_addr, (socklen_t *) &addr_length);
 
 
@@ -89,7 +88,7 @@ boost::shared_ptr <Proxies::Mrrocpp::Socket> Socket::acceptConnection()
 	boost::shared_ptr <Socket> s = boost::shared_ptr <Socket>(new Socket());
 	s->fd = acceptedFd;
 
-	LOG(LNOTICE) << "Socket::acceptConnection zrobione()\n";
+	LOG(LTRACE) << "Socket::acceptConnection zrobione()\n";
 
 	return s;
 }
@@ -109,15 +108,15 @@ bool Socket::isDataAvailable(double sec)
 		tvPtr = &tv;
 	}
 
-	//LOG(LNOTICE) << "BEFORE SELECT\n";
-	int retval = select(fd + 1, &rfds, NULL, NULL, NULL);
+	LOG(LTRACE) << "BEFORE SELECT " << fd << ", czekam: " << sec << "\n";
+	int retval = select(fd + 1, &rfds, NULL, NULL, tvPtr);
 
 	if (retval < 0) {
 		throw runtime_error("select() failed: " + string(strerror(errno)));
 	}
-	return retval > 0;
+	LOG(LTRACE) << "AFTER SELECT " << retval << "\n";
 
-	LOG(LNOTICE) << "AFTER SELECT " << retval << "\n";
+	return retval > 0;
 }
 
 bool Socket::isSocketOpened() const

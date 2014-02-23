@@ -66,7 +66,6 @@ protected:
 	void onEvent();
 
 	Base::EventHandler2 h_onEvent;
-	//Base::Event *event;
 
 	Base::DataStreamOut <struct timespec> out_timestamp;
 

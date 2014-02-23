@@ -176,8 +176,6 @@ private:
 	boost::shared_ptr <Types::Mrrocpp_Proxy::Reading> readingMessage;
 	boost::shared_ptr <Types::Mrrocpp_Proxy::Reading> rpcResultMessage;
 
-	Base::DataStreamOut <int> out_loopsWithoutResponses;
-
 	void receiveBuffersFromMrrocpp();
 	void sendBuffersToMrrocpp();
 
@@ -195,7 +193,6 @@ private:
 	boost::mutex rpcCallMutex;
 
 	Base::Property<int> port;
-	//Base::Property<double> acceptConnectionTimeout;
 
 	double waitForRequestTimeout;
 	double acceptConnectionTimeout;
@@ -204,7 +201,6 @@ private:
 
 	int loops;
 	float total;
-	int loopsWithoutResponses;
 };
 
 } // namespace Mrrocpp {

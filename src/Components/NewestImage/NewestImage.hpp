@@ -7,7 +7,6 @@
 #define NEWESTIMAGE_PROCESSOR_HPP_
 
 #include <opencv2/core/core.hpp>
-//#include <opencv2/imgproc/imgproc.hpp>
 
 #include "Component_Aux.hpp"
 #include "Component.hpp"
@@ -69,7 +68,6 @@ protected:
 	Base::EventHandler2 h_onNewImage;
 
 	Base::DataStreamOut<cv::Mat> out_img;
-	//Base::Event * newImage;
 };
 
 }//: namespace NewestImage

@@ -113,7 +113,6 @@ private:
 
 	Base::EventHandler2 h_onObjectLocated;
 	Base::EventHandler2 h_onObjectNotFound;
-	//Base::Event* readingReady;
 };
 
 }//: namespace VisualServoPB

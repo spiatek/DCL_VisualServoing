@@ -109,10 +109,6 @@ private:
 
 	Base::EventHandler2 h_onObjectLocated;
 	Base::EventHandler2 h_onObjectNotFound;
-
-	//Base::EventHandler <VisualServoIB_Processor> h_onObjectLocated;
-	//Base::EventHandler <VisualServoIB_Processor> h_onObjectNotFound;
-	//Base::Event* readingReady;
 };
 
 }//: namespace VisualServoIB

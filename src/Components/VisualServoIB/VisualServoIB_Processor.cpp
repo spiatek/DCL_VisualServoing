@@ -88,7 +88,6 @@ void VisualServoIB_Processor::onObjectLocated()
 
 
 		out_reading.write(ibr);
-		//readingReady->raise();
 	}catch(exception& ex){
 		LOG(LERROR) << "VisualServoIB_Processor::onObjectLocated(): " << ex.what();
 	}
@@ -103,8 +102,6 @@ void VisualServoIB_Processor::onObjectNotFound()
 		ibr.imagePosition.elements[i]= 0;
 	}
 	out_reading.write(ibr);
-
-	//readingReady->raise();
 }
 
 }//: namespace VisualServoIB

@@ -35,8 +35,6 @@ void NewestImage_Processor::prepareInterface()
 	h_onNewImage.setup(boost::bind(&NewestImage_Processor::onNewImage, this));
 	registerHandler("onNewImage", &h_onNewImage);
 	addDependency("onNewImage", &in_img);
-
-	//newImage = registerEvent("newImage");
 }
 
 bool NewestImage_Processor::onInit()
@@ -75,7 +73,6 @@ void NewestImage_Processor::onNewImage()
 		return;
 	}
 	out_img.write(in_img.read().clone());
-	//newImage->raise();
 }
 
 }//: namespace NewestImage

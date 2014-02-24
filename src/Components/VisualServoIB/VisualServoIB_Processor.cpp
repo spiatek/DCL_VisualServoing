@@ -33,6 +33,7 @@ void VisualServoIB_Processor::prepareInterface()
 
 	// Register data streams, events and event handlers HERE!
 	registerStream("in_position", &in_position);
+	registerStream("in_objectNotFound", &in_objectNotFound);
 	registerStream("out_reading", &out_reading);
 
 	h_onObjectLocated.setup(boost::bind(&VisualServoIB_Processor::onObjectLocated, this));
@@ -41,7 +42,7 @@ void VisualServoIB_Processor::prepareInterface()
 
 	h_onObjectNotFound.setup(boost::bind(&VisualServoIB_Processor::onObjectNotFound, this));
 	registerHandler("onObjectNotFound", &h_onObjectNotFound);
-	addDependency("onObjectNotFound", &in_position);
+	addDependency("onObjectNotFound", &in_objectNotFound);
 
 	//readingReady = registerEvent("readingReady");
 }
@@ -97,6 +98,10 @@ void VisualServoIB_Processor::onObjectLocated()
 void VisualServoIB_Processor::onObjectNotFound()
 {
 	LOG(LTRACE) << "VisualServoIB_Processor::onObjectNotFound()\n";
+	bool objectNotFound = in_objectNotFound.read();
+	if(!objectNotFound) {
+		return;
+	}
 	IBReading ibr;
 	ibr.objectVisible = false;
 	for (int i = 0; i < ImagePosition::elementsSize; ++i) {

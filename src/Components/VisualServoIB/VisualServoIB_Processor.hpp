@@ -105,6 +105,7 @@ private:
 	void onObjectNotFound();
 
 	Base::DataStreamIn<Types::ImagePosition> in_position;
+	Base::DataStreamIn<bool> in_objectNotFound;
 	Base::DataStreamOut<Types::Mrrocpp_Proxy::IBReading> out_reading;
 
 	Base::EventHandler2 h_onObjectLocated;

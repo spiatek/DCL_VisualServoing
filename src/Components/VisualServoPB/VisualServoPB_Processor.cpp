@@ -41,8 +41,6 @@ void VisualServoPB_Processor::prepareInterface() {
 	registerHandler("onObjectNotFound", &h_onObjectNotFound);
 	addDependency("onObjectNotFound", &in_position);
 	addDependency("onObjectNotFound", &in_timestamp);
-
-	//readingReady = registerEvent("readingReady");
 }
 
 bool VisualServoPB_Processor::onInit() {
@@ -80,7 +78,6 @@ void VisualServoPB_Processor::onObjectLocated() {
 	pbr.objectPosition = in_position.read();
 
 	out_reading.write(pbr);
-	//readingReady->raise();
 }
 
 void VisualServoPB_Processor::onObjectNotFound() {
@@ -96,8 +93,6 @@ void VisualServoPB_Processor::onObjectNotFound() {
 		}
 	}
 	out_reading.write(pbr);
-
-	//readingReady->raise();
 }
 
 void VisualServoPB_Processor::saveTime(Types::Mrrocpp_Proxy::PBReading& reading) {

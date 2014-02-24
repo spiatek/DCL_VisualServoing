@@ -34,8 +34,6 @@ void EventTimestamp_Processor::prepareInterface()
 	h_onEvent.setup(boost::bind(&EventTimestamp_Processor::onEvent, this));
 	registerHandler("onEvent", &h_onEvent);
 
-	//event = registerEvent("event");
-
 	if(clock_getres(CLOCK_REALTIME, &clockResolution) == -1){
 		LOG(LFATAL) << "clock_getres() failed. " << strerror(errno);
 	}
@@ -61,7 +59,6 @@ void EventTimestamp_Processor::onEvent()
 	}
 
 	out_timestamp.write(currentTime);
-	//event->raise();
 }
 
 bool EventTimestamp_Processor::onFinish()

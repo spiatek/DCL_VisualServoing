@@ -42,8 +42,6 @@ Mrrocpp_Proxy::Mrrocpp_Proxy(const std::string & name) :
 
 	waitForRequestTimeout = 0.5;
 	acceptConnectionTimeout = 0.1;
-	//waitForRequestTimeout = numeric_limits <double>::infinity();
-	//acceptConnectionTimeout = 5;
 }
 
 Mrrocpp_Proxy::~Mrrocpp_Proxy()
@@ -55,11 +53,8 @@ void Mrrocpp_Proxy::prepareInterface()
 {
 	LOG(LTRACE) << "Mrrocpp_Proxy::prepareInterface\n";
 
-	loopsWithoutResponses = 0;
-
 	registerStream("reading", &reading);
 
-	//rpcCall = registerEvent("rpcCall");
 	registerStream("rpcParam", &rpcParam);
 	registerStream("rpcResult", &rpcResult);
 	h_onRpcResult.setup(boost::bind(&Mrrocpp_Proxy::onRpcResult, this));
@@ -164,14 +159,11 @@ void Mrrocpp_Proxy::tryReceiveFromMrrocpp()
 	try {
 		LOG(LTRACE)<<"Mrrocpp_Proxy::tryReceiveFromMrrocpp() begin\n";
 		if (clientSocket->isDataAvailable(waitForRequestTimeout)) {
-			loopsWithoutResponses = 0;
 			receiveBuffersFromMrrocpp();
 			if (imh.is_rpc_call) {
 				LOG(LNOTICE)<<"RPC Call received.";
 				rpcCallMutex.lock();
 				rpcParam.write(*iarchive); // send RPC param
-				//TODO: !!!!!!!!
-				//rpcCall->raise();
 				state = MPS_WAITING_FOR_RPC_RESULT; // wait for RPC result
 			} else {
 				oarchive->clear_buffer();
@@ -185,11 +177,6 @@ void Mrrocpp_Proxy::tryReceiveFromMrrocpp()
 				readingMessage.reset();
 			}
 		}
-		else {
-			if(loopsWithoutResponses < 1000) loopsWithoutResponses++;
-		}
-		out_loopsWithoutResponses.write(loopsWithoutResponses);
-
 	} catch (std::exception& ex) {
 		LOG(LERROR) << "Mrrocpp_Proxy::tryReceiveFromMrrocpp(): Probably client disconnected: " << ex.what();
 		LOG(LTRACE) << "Closing socket.\n";
